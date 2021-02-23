@@ -1,0 +1,24 @@
+{% extends "system/base.html" %}
+{% block title %} Customer Registration {% endblock title %}
+{% block content %}
+    <style>
+        .btn btn-success{
+        text-align:right;
+        }
+    </style>
+    <div class="item">
+        <span class="icon"><i class="fas fa-user-plus"></i></span>
+        <span class="title">Customer Membership</span>
+    </div>
+    <div>
+        <div class="form-group">
+            <form method="post">
+                {% csrf_token %}
+                      {{ form.as_p}}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-success">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
