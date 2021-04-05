@@ -1,0 +1,186 @@
+{% extends "system/base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<style>
+img{
+width:300px;
+height:120px;
+}
+.card-footer {
+    text-align: center;
+    background-color:#0066b2;
+    }
+
+.card-footer:hover {
+    color:white;
+    background-color:#13274F;
+}
+table, th, td {
+  border-collapse: collapse;
+}
+th{
+    font-size:15px;
+}
+td {
+    font-size:13px;
+}
+</style>
+
+<form method='POST' action=''>
+    {% csrf_token %}
+    <table class="table">
+        <td >
+            {{ form.item_code|as_crispy_field }}
+         </td>
+         <td >
+            {{ form.item_name|as_crispy_field }}
+         </td>
+                <td>
+            {{ form.category|as_crispy_field }}
+          </td>
+            <input type="hidden" name="purchaseDetails2" id="purchaseDetails2">
+            <input type="hidden" name="salesValues" id="salesValues" value="{{salesValues}}">
+         <td style="padding-top: 30px;">
+            <input class="btn btn-primary" type="submit" value='Search'/>
+         </td>
+    </table>
+</form>
+<br>
+<div class="col-7" style="float:left;">
+    {% for instance in queryset %}
+    <div class="card" style="width: 15rem; float:left; margin:10px;">
+      <img class="card-img-top" src="{{instance.get_image_url}}" alt="Card image cap">
+      <div class="card-body">
+          <h7 style="float:left;"><b>{{instance.item_name}} </b></h7><h6 style="float:right;">Rs. {{instance.price}} </h6><br/><br/>
+          <center><i style="color:blue;">Quantity:</i>
+          <input id={{instance.item_code}} type="number" class="form-group" style="width: 4rem; margin-bottom:6px; color:blue;" value="1" /></center>
+          <div type="button"  class="card-footer btn-primary" onclick="addItem({'ID':' {{instance.item_code}} ', 'name':' {{instance.item_name}} ', 'price':{{instance.price}}})">
+                        Add to cart
+          </div>
+      </div>
+    </div>
+    {% endfor%}
+</div>
+<div class="col-5" style="float:left;">
+  <form method="POST"  action="{% url 'submitDetails'%}">
+      {% csrf_token %}
+    <div>
+        <h2> <center>Billing Details</center> </h2>
+        <table id="sales" class="table" ></table>
+        <br>
+        <span id="total"></span>
+    </div>
+      <input type="hidden" name="purchaseDetails" id="purchaseDetails">
+      <input type="hidden" name="totalValue" id="totalValue">
+      <input type="submit" class="btn btn-primary" value="Proceed">
+  </form>
+</div>
+        <script>
+            var tableHeader= ['#','ID','name','price','quantity','line total',''];
+            var salesValue=[];
+            if (Boolean("{{salesValues}}")){
+                try{
+                    var list= JSON.parse("{{salesValues}}".replace(/&quot;/g,'"').slice(1,-1));
+                    console.log(list);
+                    if (list.length!=0){
+                        for (var val in list){
+                            console.log(list[val]);
+                            salesValue.push(list[val]);
+                        }
+                    }
+                }catch{}
+            }
+            var codes=[];
+            function createHeader(table,tableHeader){
+                let tHead= table.createTHead();
+                let trow= tHead.insertRow();
+                for (val in tableHeader){
+                    let th= document.createElement('th');
+                    let text= document.createTextNode(tableHeader[val]);
+                    th.appendChild(text)
+                    trow.appendChild(th);
+                }
+            }
+            function addElement(row,val){
+                let cell=row.insertCell();
+                let text=document.createTextNode(val);
+                cell.appendChild(text);
+            }
+            function createTableBody(table,salesValues){
+               var inc =1;
+               for (val in salesValue){
+                let row= table.insertRow();
+                addElement(row,inc);
+                var someData=salesValues[val]['ID'];
+                addElement(row,someData);
+                var someData=salesValues[val]['name'];
+                addElement(row,someData);
+                 var someData=salesValues[val]['price'];
+                addElement(row,someData);
+                 var someData=salesValues[val]['quantity'];
+                addElement(row,someData);
+                 var someData=(salesValues[val]['quantity'])* (salesValues[val]['price']);
+                addElement(row,someData);
+                var button=document.createElement('td');
+                button.innerHTML='<input id= '+inc+' type="button" name="remove" class="btn btn-danger" onclick="removeItem(this.id)" value="X">';
+               row.appendChild(button);
+               inc=inc+1;
+               }
+
+            }
+
+            function addItem(dataToAdd){
+                var IDs=dataToAdd['ID'].trim();
+                console.log(IDs);
+                dataToAdd['quantity']=document.getElementById(IDs).value;
+                dataToAdd['line total']=(dataToAdd['price']) * (dataToAdd['quantity']);
+                if (!codes.includes(dataToAdd['ID'])){
+                    salesValue.push(dataToAdd);
+                    codes.push(dataToAdd['ID']);
+                }else{
+                    alert("The Item is already recorded.");
+                }
+                var tableContent= document.getElementById('sales');
+                tableContent.innerHTML="";
+                createHeader(tableContent, tableHeader);
+                createTableBody(tableContent,salesValue);
+                var sumval=sumVal();
+                document.getElementById("purchaseDetails").value=JSON.stringify(salesValue);
+                document.getElementById("purchaseDetails2").value=JSON.stringify(salesValue);
+                document.getElementById("totalValue").value=JSON.stringify(sumval);
+            }
+
+        var tableContent= document.getElementById('sales');
+        createHeader(tableContent, tableHeader);
+        createTableBody(tableContent,salesValue);
+
+        function sumVal(){
+            var sumval=0;
+            var totalsalesElement= document.getElementById('total');
+            totalsalesElement.innerHTML="";
+            for(ele in salesValue){
+                sumval=sumval+salesValue[ele]['line total'];
+            }
+            var spanval=document.createElement('td');
+            spanval.innerHTML='<h3>Total Bill Amount: '+ sumval +'</h3>'
+            totalsalesElement.appendChild(spanval);
+            return sumval;
+        }
+
+        function removeItem(indexVal){
+            console.log(indexVal);
+            console.log(salesValue);
+            salesValue.splice(indexVal-1, 1);
+            codes.splice(indexVal-1, 1);
+            console.log(salesValue);
+             var tableContent= document.getElementById('sales');
+             tableContent.innerHTML="";
+            createHeader(tableContent, tableHeader);
+            createTableBody(tableContent,salesValue);
+            sumVal();
+        }
+        sumVal();
+        </script>
+
+{% endblock content %}

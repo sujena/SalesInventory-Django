@@ -1,0 +1,87 @@
+{% extends "system/base.html" %}
+{% block content %}
+
+<form method='POST' class="form-group" action="{% url 'savePurchaseDetails' %}">
+     {% csrf_token %}
+    <h6> Order Date: {{date}}</h6>
+    <label for="phone"> Customer Phone: </label>
+    <input id="phone" name="phone" type="number" class="form-control"/><br/>
+    <label> Discount: </label>
+     <input id="offer" name="offer" type="number" value=0 class="form-control" />
+    <button type="button" class="btn btn-outline-primary btn-sm" style="float:right; margin:10px;" onclick="discount()">Apply</button>
+    <table id="sales" class="table table-striped"></table>
+    <div class="rounded" style="background-color:lightgrey; text-align:right; padding:15px;">Total Bill Amount:
+        <h3 id="total" style="text-align:right; margin:10px;">{{total}}</h3>
+    </div>
+    <input type="hidden" name="purchaseDetails" value="{{purchaseDetails}}" id="purchaseDetails"/>
+    <input id="newVal" name="newVal" value="{{total}}" type="hidden" />
+     <input class="btn btn-primary" name="action" style="float:right; margin:10px;" type="submit" value='Save'/>
+    <input class="btn btn-primary" style="float:right; margin:10px;" type="button" value='Mail'/>
+</form>
+<script>
+            var tableHeader= ['#','ID','name','price','quantity','line total'];
+            var salesValue=[];
+            console.log("hello"+document.getElementById('purchaseDetails').value);
+
+            if (Boolean("{{purchaseItems}}")){
+                var list= JSON.parse("{{purchaseItems}}".replace(/&quot;/g,'"').slice(1,-1));
+                console.log(list);
+                if (list.length!=0){
+                    for (var val in list){
+                        console.log(list[val]);
+                        salesValue.push(list[val]);
+                    }
+                }
+            }
+            function createHeader(table,tableHeader){
+                let tHead= table.createTHead();
+                let trow= tHead.insertRow();
+                for (val in tableHeader){
+                    let th= document.createElement('th');
+                    let text= document.createTextNode(tableHeader[val]);
+                    th.appendChild(text)
+                    trow.appendChild(th);
+                }
+            }
+            function addElement(row,val){
+                let cell=row.insertCell();
+                let text=document.createTextNode(val);
+                cell.appendChild(text);
+            }
+            function createTableBody(table,salesValues){
+               var inc =1;
+               for (val in salesValue){
+                let row= table.insertRow();
+                addElement(row,inc);
+                var someData=salesValues[val]['ID'];
+                addElement(row,someData);
+                var someData=salesValues[val]['name'];
+                addElement(row,someData);
+                 var someData=salesValues[val]['price'];
+                addElement(row,someData);
+                 var someData=salesValues[val]['quantity'];
+                addElement(row,someData);
+                 var someData=(salesValues[val]['quantity'])* (salesValues[val]['price']);
+                addElement(row,someData);
+
+               inc=inc+1;
+               }
+            }
+            var tableContent= document.getElementById('sales');
+            createHeader(tableContent, tableHeader);
+            createTableBody(tableContent,salesValue);
+
+
+            function discount(){
+                document.getElementById('total').innerHTML="";
+                var dis;
+                dis= parseInt(document.getElementById('offer').value);
+                total= parseInt({{total}});
+                a= (dis/100) *total;
+                newTotal= total-a;
+                document.getElementById('total').innerHTML=newTotal;
+                console.log(newTotal)
+                 document.getElementById("newVal").value=JSON.stringify(newTotal);
+            }
+ </script>
+{% endblock content %}

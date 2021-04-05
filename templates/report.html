@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Report {{today}}</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .table{
+              table-layout: auto;
+              width: 100%
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'><b>Sales Report </b><br> ( {{from_date}} to {{today}} )</p>
+            </div>
+        <div>
+        <div class='details'>
+            <b>Report generated Date: {{today}}</b>
+            <br>
+            <table class="table">
+                <tr>
+                    <td style="margin-right:40px;"> Number of Customers registered last 30 days:</td>
+                    <td>{{customerNo}} </td>
+                </tr>
+                <tr>
+                    <td> Number of Purchases in last 30 days: </td>
+                    <td> {{purchaseNo}} </td>
+                </tr>
+                <tr>
+                    <td> Number of Items in Inventory: </td>
+                    <td> {{inventoryNo}} </td>
+                </tr>
+                <tr>
+                    <td> Number of Items stocked in last 30 days: </td>
+                    <td> {{newItems}} </td>
+                </tr>
+
+                <tr>
+                    <td> Total Items sold: </td>
+                    <td> {{itemSold}} </td>
+                </tr>
+            </table>
+            <hr class='hrItem' />
+        </div>
+            <br>
+            <h3>Top 5 Purchases:</h3>
+               <table>
+                   <thead style="color:#007cae;">
+                        <tr style="padding: 5px 20px 10px 20px; text-align:center;">
+                            <th  >Purchase ID</th>
+                            <th >Customer</th>
+                            <th >Discount</th>
+                            <th >Total</th>
+                        </tr>
+                                    </thead>
+                                    <tbody style="padding: 10px 20px 10px 20px; text-align:center;">
+                                    {%for instance in top5%}
+                                            <tr>
+                                            <td>{{instance.id}}</td>
+                                            <td>{{instance.customer}}</td>
+                                            <td>{{instance.discount}}</td>
+                                            <td>{{instance.total_price}}</td>
+                                          </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+            <br>
+             <hr class='hrItem' /> <br>
+            <h3>Top 5 Items:</h3>
+               <table>
+                   <thead style="color:#007cae;">
+                        <tr style="padding: 5px 20px 10px 20px; text-align:center;">
+                            <th  >Item Code</th>
+                            <th >Item Name</th>
+                            <th >Items Sold</th>
+
+                        </tr>
+                                    </thead>
+                                    <tbody style="padding: 10px 20px 10px 20px; text-align:center;">
+                                    {%for instance in top_products%}
+                                            <tr>
+                                            <td>{{instance.item_code}}</td>
+                                            <td>{{instance.item_name}}</td>
+                                            <td>{{instance.items_sold}}</td>
+
+                                          </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table><br>
+                        <hr class='hrItem' />
+
+    </div><br>
+            <footer>
+                <center> Namaste Sales and Management.<br> {{ today.year }}</center>
+            </footer>
+    </body>
+</html>

@@ -1,0 +1,84 @@
+{% extends "system/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+
+.card-footer {
+    text-align: center;
+    color:blue;
+    }
+
+.card-footer:hover {
+    color:white;
+}
+</style>
+<!--<div class="table-responsive">
+    <table class='table table-striped'>
+        <thead class="thead-dark">
+        <tr>
+            <th>S.N</th>
+            <th>ITEM</th>
+            <th>STOCK</th>
+            <th>CATEGORY</th>
+            <th>PRICE</th>
+        </tr>
+        </thead>
+
+        {% for instance in queryset %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{instance.item_name}}</td>
+            <td>{{instance.in_stock}}</td>
+            <td>{{instance.category}}</td>
+            <td>{{instance.price}}</td>
+        </tr>
+        {% endfor%}
+    </table>
+</div>-->
+<form method='POST' action=''>
+    {% csrf_token %}
+    <table class="table">
+        <td >
+            {{ form.item_code|as_crispy_field }}
+         </td>
+         <td >
+            {{ form.item_name|as_crispy_field }}
+         </td>
+                <td>
+            {{ form.category|as_crispy_field }}
+          </td>
+         <td style="padding-top: 30px;">
+            <input class="btn btn-primary" type="submit" value='Search'/>
+         </td>
+    </table>
+</form>
+<br>
+{% for instance in queryset %}
+
+            <div class="card">
+                <div class="card-horizontal">
+                    <div class="img-square-wrapper">
+                        <img class="" src="http://via.placeholder.com/300x180" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{instance.item_name}} | Rs. {{instance.price}}</h4>
+                        <span>Category: {{instance.category}}</span>
+                        <p class="card-text">{{instance.item_desc}}</p>
+                        <span>In Stock: {{instance.in_stock}}</span>
+                        <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                    </div>
+                </div>
+                <div class="card-footer btn-primary">
+                    Add to cart
+                </div>
+        </div>
+<br/>
+{% endfor%}
+
+{% endblock content %}
+
