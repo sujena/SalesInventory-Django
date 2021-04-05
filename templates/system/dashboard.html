@@ -1,6 +1,284 @@
 {% extends "system/base.html" %}
 {% block content %}
-hello, {{ user.username }}
-<a  href="{% url 'logout'%}">Logout</a>
-<img src="dashboard.png"/>
-{% endblock content %}
+
+<style>
+  close{
+  float:right;
+  }
+
+#page-content-wrapper {
+    width: 100%;
+	transition: all 0.5s ease;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -270px;
+
+	transition: all 0.5s ease;
+}
+
+ .toggled#page-content-wrapper{
+  margin-left:270px;
+  transition: all 0.5s ease;
+ }
+
+ @media only screen and (min-width:992px){
+ .toggled#page-content-wrapper{
+    width:calc(100% - 270px);
+	}
+ }
+
+
+.card {
+    margin-bottom: 24px;
+	border:none;
+    box-shadow: 0 0 0.875rem 0 rgba(33,37,41,.05);
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+}
+.card-title {
+    font-size: .875rem;
+    color: #495057;
+}
+
+.card-body h1{
+font-size: 1.75rem;
+font-weight: 400;
+    line-height: 1.2;
+    color: #000;
+}
+
+
+.text-gray-800 {
+    color: #5a5c69!important;
+	font-size: 1.75rem;
+	font-weight: 400;
+    line-height: 1.2;
+}
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem 0 rgba(58,59,69,.2)!important;
+}
+
+
+.btn-sm {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+
+.font-16 {
+    font-size: 16px;
+}
+
+
+
+/*---------------------------------
+main-top card
+----------------------*/
+
+
+
+
+/*---------------------------------
+main-table
+----------------------*/
+
+
+ .m-r-10 {
+    margin-right: 10px;
+}
+.btn-circle {
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #2962FF;
+    border-color: #2962FF;
+}
+
+.btn-orange {
+    color: #212529;
+    background-color: #fb8c00;
+    border-color: #fb8c00;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #36bea6;
+    border-color: #36bea6;
+}
+.btn-purple {
+    color: #fff;
+    background-color: #7460ee;
+    border-color: #7460ee;
+}
+
+.card .card-title {
+    position: relative;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+
+.card .card-subtitle {
+    font-weight: 300;
+    margin-bottom: 10px;
+    color: #a1aab2;
+	  margin-top: -0.375rem;
+}
+
+
+.table td, .table th {
+    padding: 1rem;
+	font-size:14px;
+	color:#333;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table h5{
+      font-size: 16px;
+	  font-weight:600;
+	  color:#585858;
+}
+
+</style>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{% if user.is_superuser %}
+          {% if messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
+                <h4>RESTOCK SOON!</h4>
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                </div>
+          {% endif %}
+      {% endif %}
+ <div class="container-fluid px-lg-4">
+<div class="row">
+<div class="col-md-12 mt-lg-4 mt-4">
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Welcome, {{user.username}}.</h1><br>
+            <a href="{% url 'report' %}"  starget ="_blank" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i>
+			Generate Report</a>
+          </div>
+		  </div>
+<div class="col-md-12">
+       <div class="row">
+									<div class="col-sm-3">
+										<div class="card" style="background-color:#F2AD9B;">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Sales</h5>
+												<h1 class="display-5 mt-1 mb-3">{{purchaseNo}}</h1>
+												<div class="mb-1">
+													<span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> In last 30 days </span>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-3">
+										<div class="card" style="background-color: #a1d1b5;">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Inventory</h5>
+												<h1 class="display-5 mt-1 mb-3">{{inventoryNo}}</h1>
+												<div class="mb-1">
+													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Items in Inventory</span>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-3">
+										<div class="card" style="background-color:#FFEBB3;">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Customers</h5>
+												<h1 class="display-5 mt-1 mb-3">{{customerNo}}</h1>
+												<div class="mb-1">
+													<span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i>  In last 30 days</span>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-3">
+										<div class="card" style="background-color: #A3C0E4;">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Items Sold</h5>
+												<h1 class="display-5 mt-1 mb-3">{{itemSold}}</h1>
+												<div class="mb-1">
+													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Number of Items Sold</span>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+
+								</div>
+</div>
+
+ <hr style="margin-top:30px;">
+        <p class="lead">
+          Are you ready for Bootstap 4? It's the 4th generation of this popular responsive framework. Bootstrap 4 will include some interesting new features such as 5 grid sizes (now including xl), cards, `em` sizing, CSS normalization (reboot) and larger font
+          sizes.
+        </p>
+                  <hr>
+
+                    <!-- column -->
+                    <div class="col-md-12 mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- title -->
+                                <div class="d-md-flex align-items-center">
+                                    <div>
+                                        <h4 class="card-title">Top Selling Products</h4>
+                                        <h5 class="card-subtitle">Overview of Top Selling Items</h5>
+                                    </div>
+                                </div>
+                                <!-- title -->
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table v-middle">
+                                    <thead>
+                                        <tr class="bg-light">
+                                                <th  class="border-top-0">Item Code</th>
+                                                <th class="border-top-0">Item Name</th>
+                                                <th  class="border-top-0">Number of Items Sold</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {%for instance in top_products %}
+                                            <tr>
+                                            <td>{{instance.item_code}}</td>
+                                            <td>{{instance.item_name}}</td>
+                                            <td>{{instance.items_sold}}</td>
+                                          </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+        </div>
+
+        </div>
+{%endblock%}

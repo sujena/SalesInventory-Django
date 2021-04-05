@@ -1,1 +1,182 @@
-You are logged out of the system.
+{% extends "system/base.html" %}
+{% block content %}
+
+  <style type="text/css">
+    body,
+    html {
+      height: 100%;
+      width: 100%;
+    }
+    /* workaround modal-open padding issue */
+
+    body.modal-open {
+      padding-right: 0 !important;
+    }
+
+    #sidebar {
+      padding-left: 0;
+    }
+    /*
+ * Off Canvas at medium breakpoint
+ * --------------------------------------------------
+ */
+
+
+ * --------------------------------------------------
+ */
+
+    @media screen and (max-width: 34em) {
+      .row-offcanvas-left .sidebar-offcanvas {
+        left: -45%;
+      }
+      .row-offcanvas-left.active {
+        left: 45%;
+        margin-left: -6px;
+      }
+      .sidebar-offcanvas {
+        width: 45%;
+      }
+    }
+
+    .card {
+      overflow: hidden;
+    }
+
+    .card-block .rotate {
+      z-index: 8;
+      float: right;
+      height: 100%;
+    }
+
+    .card-block .rotate i {
+      color: rgba(20, 20, 20, 0.15);
+      position: absolute;
+      left: 0;
+      left: auto;
+      right: -10px;
+      bottom: 0;
+      display: block;
+      -webkit-transform: rotate(-44deg);
+      -moz-transform: rotate(-44deg);
+      -o-transform: rotate(-44deg);
+      -ms-transform: rotate(-44deg);
+      transform: rotate(-44deg);
+    }
+  </style>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{% if user.is_superuser %}
+          {% if messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4>RESTOCK SOON!</h4>
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                </div>
+          {% endif %}
+      {% endif %}
+      <div class="col-md-9 col-lg-10">
+        <h1 class="display-5 hidden-xs-down">
+            Welcome, {{ user.username }}.
+            </h1>
+        <p class="lead hidden-xs-down">Here is your dashboard. View the sales report here.</p>
+
+
+        <div class="row mb-4">
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-inverse card-success">
+              <div class="card-block bg-success">
+                <div class="rotate">
+                  <i class="fa fa-user fa-5x"></i>
+                </div>
+                <h6 class="text-uppercase">Inventory</h6>
+                <h1 class="display-2">{{inventoryNo}}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-inverse card-danger">
+              <div class="card-block bg-danger">
+                <div class="rotate">
+                  <i class="fa fa-list fa-4x"></i>
+                </div>
+                <h6 class="text-uppercase">Sales</h6>
+                <h1 class="display-2">{{purchaseNo}}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-inverse card-info">
+              <div class="card-block bg-info">
+                <div class="rotate">
+                  <i class="fa fa-twitter fa-5x"></i>
+                </div>
+                <h6 class="text-uppercase">Customers</h6>
+                <h1 class="display-2">{{customerNo}}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-inverse card-warning">
+              <div class="card-block bg-warning">
+                <div class="rotate">
+                  <i class="fa fa-share fa-5x"></i>
+                </div>
+                <h6 class="text-uppercase">Items sold</h6>
+                <h1 class="display-2">{{itemSold}}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <hr>
+        <p class="lead">
+          Are you ready for Bootstap 4? It's the 4th generation of this popular responsive framework. Bootstrap 4 will include some interesting new features such as 5 grid sizes (now including xl), cards, `em` sizing, CSS normalization (reboot) and larger font
+          sizes.
+        </p>
+                  <hr>
+        <div class="row mb-3">
+          <div class="col-lg-3 col-md-4">
+            <div class="card">
+              <img class="card-img-top img-responsive" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5hVreI92WISduowr0wHUzX-Wavq__dTn75qVhmLx4I7zhKyAumDpkFLCQdOrlnYHWekA&usqp=CAU" alt="Card image cap">
+              <div class="card-block">
+                <h4 class="card-title">Sales</h4>
+                <p class="card-text">You can grow your sales and customers by managing your stocks and sales effectively through Namaste Applicagtion.</p>
+                <h6 style="color:red;text-align:center;">View Sales >> </h6>
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="col-lg-9 col-md-8">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead class="thead-inverse">
+                  <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Discount</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {%for instance in lastTen%}
+                  <tr>
+                    <td>{{instance.id}}</td>
+                    <td>{{instance.customer}}</td>
+                    <td>{{instance.discount}}</td>
+                    <td>{{instance.total_price}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!--/row-->
+{% endblock content %}
