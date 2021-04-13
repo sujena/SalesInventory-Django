@@ -6,10 +6,10 @@ from . import views
 
 
 urlpatterns = [
-    path('listItems/', views.list_items, name='inventory-items'),
     path('transaction/', views.transaction, name='transaction'),
     path('submitDetails/', views.submitDetails, name='submitDetails'),
     path('savePurchaseDetails/', views.savePurchaseDetails, name='savePurchaseDetails'),
+    path('savePurchaseDetails/mailReceipt', views.mailReceipt, name='mailReceipt'),
 
 ]
 

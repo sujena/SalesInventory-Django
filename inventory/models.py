@@ -50,27 +50,18 @@ class Inventory(models.Model):
 
 
 class Offers(models.Model):
-    offer_code = models.CharField(max_length=10)
-    mail_body = models.CharField(max_length=255, default="Mail")
-    discount_pct = models.IntegerField()
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-
-    @property
-    def status(self):
-        if self.valid_from <= datetime.datetime.now() <= self.valid_to():
-            return 'Valid'
-        else:
-            return 'Invalid'
-
-    @property
-    def valid(self):
-        status = Offers.status
-        if status == 'Valid':
-            return str(self.offer_code)
-
-    def __str__(self):
-        return self.offer_code
+    mail_subject = models.CharField(max_length=255)
+    mail_body = models.CharField(max_length=255)
+    mail_date = models.DateField()
+    mailStatus = (
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+    )
+    mail_status= models.CharField(
+        max_length=7,
+        choices=mailStatus,
+        default='Pending',
+    )
 
 
 class Sales(models.Model):

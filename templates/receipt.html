@@ -1,11 +1,23 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <title>Title</title>
+        <title>Receipt</title>
         <style type="text/css">
             body {
                 font-weight: 200;
                 font-size: 14px;
+            }
+             .table{
+              table-layout: auto;
+              width: 100%;
+              text-align:center;
+              border: 1px solid black;
+            }
+           .thead{
+                background-color:#ADD8E6;
+           }
+            th, td {
+              padding: 7px;
             }
             .header {
                 font-size: 20px;
@@ -39,15 +51,34 @@
     <body>
         <div class='wrapper'>
             <div class='header'>
-                <p class='title'>Invoice # </p>
+                <p class='title'>Receipt #{{id}} </p>
             </div>
         <div>
         <div class='details'>
-            Bill to: <br/>
-            Amount:  <br/>
-            Date:
+            Receipt to: {{customer}} <br/>
+            Amount Paid: {{total}} <br/>
+            Date: {{date}}
             <hr class='hrItem' />
         </div>
+             <p class='title'>List of Items Purchased: </p>
+            <table class="table" >
+                <tr class="thead">
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                    <th>Purchase Unit</th>
+                    <th>Line Total</th>
+                </tr>
+                <tbody>
+                {% for i in list%}
+                <tr>
+                    <td>{{i.0}}</td>
+                    <td>{{i.1}}</td>
+                    <td>{{i.2}}</td>
+                    <td>{{i.3}}</td>
+                </tr>
+                 {% endfor %}
+            </tbody>
+          </table>
     </div>
     </body>
 </html>

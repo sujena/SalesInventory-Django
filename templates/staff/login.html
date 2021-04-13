@@ -16,7 +16,7 @@
 body {
 	font-family: 'Varela Round', sans-serif;
 	font-size: 15px;
-	background: white;
+	background: #212529;
 }
 .modal-content{
 	background-color: gainsboro;
@@ -94,7 +94,7 @@ body {
 	border: none;
 }
 .modal-login .btn:hover, .modal-login .btn:focus {
-	background: #45aba6 !important;
+	background: #2F4F4F !important;
 	outline: none;
 }
 .box{
@@ -107,9 +107,6 @@ body {
 </style>
 </head>
 <body>
-
-<!-- Modal HTML -->
-
 	<div class="modal-dialog modal-login">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -131,10 +128,9 @@ body {
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a href="{% url 'admin:index' %}">Are you an admin?</a>
+				<a href="{% url 'password_reset' %}">Forgot Password?</a>
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

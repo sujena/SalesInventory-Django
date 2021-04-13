@@ -1,0 +1,35 @@
+{% extends "system/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+    label{
+    margin-top:10px;
+    }
+    .btn-primary{
+    float:right;
+    margin-right:30px;
+    }
+</style>
+     {% if messages %}
+              <div class="alert alert-success alert-dismissible" role="alert">
+                    {% for message in messages %}
+                    <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+{% endif %}
+<legend class="border-bottom mb-4">Profile Info <a href="{% url 'password_reset' %}" class="btn btn-primary btn-sm"> Change Password</a>
+</legend>
+      <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <label>Full Name</label>
+              <input class="form-control" value="{{ user.first_name }} {{ user.last_name }}" readonly/>
+              {{ u_form|crispy }}<br>
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-outline-info" type="submit">Update</button>
+          </div>
+      </form>
+
+    </div>
+{% endblock content %}

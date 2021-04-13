@@ -3,9 +3,11 @@
 
 <form method='POST' class="form-group" action="{% url 'savePurchaseDetails' %}">
      {% csrf_token %}
-    <h6> Order Date: {{date}}</h6>
+    <h6><b> Order Date:</b> {{date}}</h6><br>
     <label for="phone"> Customer Phone: </label>
-    <input id="phone" name="phone" type="number" class="form-control"/><br/>
+    <input id="phone" name="phone" type="number" onchange="check()" class="form-control"/>
+    <p id="invalid" style="color:red; float:right;padding-top:2px;"></p>
+    <br/>
     <label> Discount: </label>
      <input id="offer" name="offer" type="number" value=0 class="form-control" />
     <button type="button" class="btn btn-outline-primary btn-sm" style="float:right; margin:10px;" onclick="discount()">Apply</button>
@@ -16,7 +18,6 @@
     <input type="hidden" name="purchaseDetails" value="{{purchaseDetails}}" id="purchaseDetails"/>
     <input id="newVal" name="newVal" value="{{total}}" type="hidden" />
      <input class="btn btn-primary" name="action" style="float:right; margin:10px;" type="submit" value='Save'/>
-    <input class="btn btn-primary" style="float:right; margin:10px;" type="button" value='Mail'/>
 </form>
 <script>
             var tableHeader= ['#','ID','name','price','quantity','line total'];
@@ -82,6 +83,20 @@
                 document.getElementById('total').innerHTML=newTotal;
                 console.log(newTotal)
                  document.getElementById("newVal").value=JSON.stringify(newTotal);
+            }
+            function check(){
+                phone= parseInt(document.getElementById('phone').value);
+                listPhone=[]
+                {% for l in list %}
+                    listPhone.push({{ l }})
+                {% endfor %}
+                console.log(typeof(phone), typeof(listPhone[0]))
+                if (!listPhone.includes(phone)){
+                    document.getElementById('phone').value="";
+                    document.getElementById('invalid').innerHTML="Invalid Phone.";
+                }else{
+                    document.getElementById('invalid').innerHTML="";
+                }
             }
  </script>
 {% endblock content %}
